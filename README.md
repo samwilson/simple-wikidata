@@ -3,6 +3,10 @@ Simple Wikidata
 
 This is a simple (and limited, by design) to interact with Wikidata from PHP.
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/build.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/build-status/master)
+
 ## Querying
 
 ```php
