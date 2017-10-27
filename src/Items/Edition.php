@@ -6,11 +6,12 @@ use Samwilson\SimpleWikidata\Item;
 
 class Edition extends Item {
 
+	const PROP_EDITION_OR_TRANSLATION_OF = 'P629';
 	const PROP_WIKISOURCE_INDEX_PAGE = 'P1957';
 	const PROP_SCANNED_FILE_ON_COMMONS = 'P996';
 	const PROP_INTERNET_ARCHIVE_ID = 'P724';
-	const PROP_PUBLICATION_DATE = '';
-	const PROP_PUBLISHER = '';
+	const PROP_PUBLICATION_DATE = 'P577';
+	const PROP_PUBLISHER = 'P123';
 
 	/**
 	 * @return string

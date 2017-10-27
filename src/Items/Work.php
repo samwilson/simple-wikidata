@@ -6,6 +6,9 @@ use Psr\Cache\CacheItemPoolInterface;
 use Samwilson\SimpleWikidata\Item;
 use Samwilson\SimpleWikidata\Query;
 
+/**
+ * @link 
+ */
 class Work extends Item {
 
 	const ITEM_WORK = 'Q386724';
@@ -81,10 +84,9 @@ class Work extends Item {
 	 */
 	public function getEditions() {
 		$sparql = "SELECT ?item WHERE {"
-			. " ?item wdt:" . self::PROP_EDITION_OR_TRANSLATION_OF . " wd:" . $this->getId()
+			. " ?item wdt:" . Edition::PROP_EDITION_OR_TRANSLATION_OF . " wd:" . $this->getId()
 			. "}";
-		$query = new Query( $sparql, $this->lang );
-		$query->setCache( $this->cache );
+		$query = new Query( $sparql, $this->lang, $this->cache );
 		$editions = $query->getItems();
 		usort( $editions, function ( Item $a, Item $b ) {
 			if ( $a instanceof EditionItem and $b instanceof EditionItem ) {

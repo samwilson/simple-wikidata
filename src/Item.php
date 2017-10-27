@@ -100,7 +100,18 @@ class Item {
 		return $this->wikidataUrlBase.$this->id;
 	}
 
-	public function getStandardProperties( $type = 'work' ) {
+	/**
+	 * Wikiprojects list their properties like this:
+	 *
+	 *     {{List of properties/Header}}
+	 *     {{List of properties/Row|id=31|example-subject=Q923767|example-object=Q3331189}}
+	 *     </table>
+	 *
+	 * @param string $wikiProject
+	 * @param string $type
+	 * @return array
+	 */
+	public function getStandardProperties( $wikiProject = 'WikiProject_Books', $type = 'work' ) {
 		if ( $type !== 'work' ) {
 			$type = 'edition';
 		}
@@ -109,8 +120,10 @@ class Item {
 			$propIds = $this->cache->getItem( $cacheKey )->get();
 		} else {
 			$domCrawler = new Crawler();
-			$domCrawler->addHtmlContent( file_get_contents( 'https://www.wikidata.org/wiki/Wikidata:WikiProject_Books' ) );
-			$propCells = $domCrawler->filterXPath( "//h3/span[@id='" . ucfirst( $type ) . "_item_properties']/../following-sibling::table[1]//td[2]/a" );
+			$wikiProjectUrl = 'https://www.wikidata.org/wiki/Wikidata:' . $wikiProject;
+			$domCrawler->addHtmlContent( file_get_contents( $wikiProjectUrl ) );
+			$propAncors = "//h3/span[@id='" . ucfirst( $type ) . "_item_properties']/../following-sibling::table[1]//td[2]/a";
+			$propCells = $domCrawler->filterXPath( $propAncors );
 			$propIds = [];
 			$propCells->each( function ( Crawler $node, $i ) use ( &$propIds ) {
 				$propId = $node->text();
@@ -161,7 +174,6 @@ class Item {
 	/**
 	 * Get the Item that is referred to by the specified item's property.
 	 *
-	 * @param string $itemId
 	 * @param string $propertyId
 	 *
 	 * @return \Samwilson\SimpleWikidata\Properties\Item[]
@@ -195,7 +207,7 @@ class Item {
 			$claim['mainsnak']['datavalue']['value']['numeric-id'] = $itemIdNumeric;
 			$apiParams = [
 				'action' => 'wbsetclaim',
-				'claim' => wp_json_encode( $claim ),
+				'claim' => json_encode( $claim ),
 			];
 		}
 
@@ -206,12 +218,12 @@ class Item {
 				'entity' => $this->getId(),
 				'property' => $property,
 				'snaktype' => 'value',
-				'value' => wp_json_encode( [ 'entity-type' => 'item', 'numeric-id' => $itemIdNumeric ] ),
+				'value' => json_encode( [ 'entity-type' => 'item', 'numeric-id' => $itemIdNumeric ] ),
 			];
 		}
 
 		// Save the property.
-		$wdWpOauth = new WdWpOauth();
+		$wdWpOauth = new WdOauth();
 		$wdWpOauth->makeCall( $apiParams, true );
 
 		// Clear the cache.
