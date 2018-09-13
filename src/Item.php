@@ -33,7 +33,7 @@ class Item {
 	/** @var string The base URL of Wikidata, with trailing slash. */
 	protected $wikidataUrlBase = 'https://www.wikidata.org/wiki/';
 
-		private function __construct( $id, $lang, CacheItemPoolInterface $cache ) {
+	private function __construct( $id, $lang, CacheItemPoolInterface $cache ) {
 		if ( !is_string( $id ) || preg_match( '/[QP][0-9]*/i', $id ) !== 1 ) {
 			throw new Exception( "Not a valid ID: " . var_export( $id, true ) );
 		}
@@ -42,21 +42,22 @@ class Item {
 		$this->entities = [];
 		$this->lang = $lang;
 		$this->cache = $cache;
-	 }
+	}
 
 	/**
 	 * Create a new Item object with class based on the item's 'instance of' statement.
 	 *
-	 * @param string $id
-	 * @param string $lang
-	 *
+	 * @param string $id The item ID (Q-number).
+	 * @param string $lang The language code.
+	 * @param CacheItemPoolInterface $cache The cache to use.
 	 * @return Item
 	 */
 	public static function factory( $id, $lang, CacheItemPoolInterface $cache ) {
 		$item = new Item( $id, $lang, $cache );
 		foreach ( $item->getPropertyOfTypeItem( self::PROP_INSTANCE_OF ) as $instanceOf ) {
 			// Try to find a class mating the 'instance of' name.
-			$possibleClassName = __NAMESPACE__ . '\\Items\\' . Str::toCamelCase( $instanceOf->getItem()->getLabel() );
+			$possibleBaseClassName = Str::toCamelCase( $instanceOf->getItem()->getLabel() );
+			$possibleClassName = __NAMESPACE__ . '\\Items\\' . $possibleBaseClassName;
 			if ( class_exists( $possibleClassName ) ) {
 				// This won't re-request the metadata, because that's cached.
 				$specificItem = new $possibleClassName( $id, $lang, $cache );
@@ -69,8 +70,11 @@ class Item {
 		return $item;
 	}
 
-	public function setCache( CacheItemPoolInterface $cache_item_pool ) {
-		$this->cache = $cache_item_pool;
+	/**
+	 * @param CacheItemPoolInterface $cache The cache to use.
+	 */
+	public function setCache( CacheItemPoolInterface $cache ) {
+		$this->cache = $cache;
 	}
 
 	/**
@@ -96,6 +100,9 @@ class Item {
 		return $entity['id'];
 	}
 
+	/**
+	 * @return string The Wikidata.org URL for this item.
+	 */
 	public function getWikidataUrl() {
 		return $this->wikidataUrlBase.$this->id;
 	}
@@ -107,7 +114,8 @@ class Item {
 	 *     {{List of properties/Row|id=31|example-subject=Q923767|example-object=Q3331189}}
 	 *     </table>
 	 *
-	 * @param string $wikiProject
+	 * @param string $wikiProject The name of the WikiProject (must exist as a Wikidata page e.g.
+	 * [[Wikidata:$wikiProject]]).
 	 * @param string $type
 	 * @return array
 	 */
@@ -146,7 +154,7 @@ class Item {
 	 * @param string $propertyId
 	 * @return bool|Time[]
 	 */
-	protected function getPropertyOfTypeTime( $propertyId ) {
+	public function getPropertyOfTypeTime( $propertyId ) {
 		$times = [];
 		$entity = $this->getEntity();
 		if ( !isset( $entity['claims'][$propertyId] ) ) {
@@ -178,7 +186,7 @@ class Item {
 	 *
 	 * @return \Samwilson\SimpleWikidata\Properties\Item[]
 	 */
-	protected function getPropertyOfTypeItem( $propertyId ) {
+	public function getPropertyOfTypeItem( $propertyId ) {
 		$entity = $this->getEntity( $this->id );
 		if ( !isset( $entity['claims'][$propertyId] ) ) {
 			return [];
@@ -222,9 +230,7 @@ class Item {
 			];
 		}
 
-		// Save the property.
-		$wdWpOauth = new WdOauth();
-		$wdWpOauth->makeCall( $apiParams, true );
+		// @TODO Save the property.
 
 		// Clear the cache.
 		$this->cache->deleteItem( $this->getEntityCacheKey( $this->id ) );

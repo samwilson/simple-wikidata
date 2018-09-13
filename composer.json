@@ -1,8 +1,8 @@
 {
     "name": "samwilson/simple-wikidata",
-    "description": "",
+    "description": "A very simplistic library for interacting with Wikidata in PHP.",
     "type": "library",
-    "license": "GPL-3.0+",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Sam Wilson",
@@ -20,6 +20,7 @@
         }
     },
     "require": {
+        "ext-json": "*",
         "mediawiki/oauthclient": "^0.1",
         "addwiki/mediawiki-api-base": "^2.0",
         "symfony/dom-crawler": "^3.0",
@@ -28,7 +29,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0",
-        "mediawiki/mediawiki-codesniffer": "^13.0",
+        "mediawiki/mediawiki-codesniffer": "^22.0",
         "tedivm/stash": "^0.14"
     }
 }
