@@ -60,8 +60,7 @@ class Item {
 			$possibleClassName = __NAMESPACE__ . '\\Items\\' . $possibleBaseClassName;
 			if ( class_exists( $possibleClassName ) ) {
 				// This won't re-request the metadata, because that's cached.
-				$specificItem = new $possibleClassName( $id, $lang, $cache );
-				return $specificItem;
+				return new $possibleClassName( $id, $lang, $cache );
 			}
 		}
 
@@ -370,11 +369,6 @@ class Item {
 		$this->cache->deleteItem( $this->getEntityCacheKey( $this->id ) );
 	}
 
-	public function getInstanceOf() {
-		$instancesOf = $this->getPropertyOfTypeItem( $this->getId(), self::PROP_INSTANCE_OF );
-		return array_shift( $instancesOf );
-	}
-
 	/**
 	 * Does this item exist?
 	 * @return bool
@@ -420,9 +414,9 @@ class Item {
 
 	/**
 	 * Get the raw entity data from the 'wbgetentities' API call.
-	 * @param string $id
+	 * @param string $id The Q-number.
 	 * @param bool $ignoreCache
-	 * @return bool
+	 * @return array|bool
 	 */
 	public function getEntity( $id = null, $ignoreCache = false ) {
 		$idActual = $id ?: $this->id;
