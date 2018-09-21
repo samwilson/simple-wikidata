@@ -6,3 +6,5 @@ build:
         coverage:
           file: 'coverage.xml'
           format: 'clover'
+      -
+        command: 'vendor/bin/phpcs'

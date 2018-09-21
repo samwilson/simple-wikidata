@@ -3,9 +3,12 @@ Simple Wikidata
 
 This is a simple (and limited, by design) package for interacting with Wikidata from PHP.
 
+[![Packagist](https://img.shields.io/packagist/v/samwilson/simple-wikidata.svg)](https://packagist.org/packages/samwilson/simple-wikidata)
+[![License](https://img.shields.io/github/license/samwilson/simple-wikidata.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![GitHub issues](https://img.shields.io/github/issues/samwilson/simple-wikidata.svg)](https://github.com/samwilson/simple-wikidata/issues)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/build.png?b=master)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/coverage.png)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/)
+[![Build Status](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/badges/build.png)](https://scrutinizer-ci.com/g/samwilson/simple-wikidata/build-status/)
 
 ## Example
 
