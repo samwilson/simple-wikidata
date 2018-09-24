@@ -6,17 +6,22 @@ use DateInterval;
 use Exception;
 use Mediawiki\Api\MediawikiApi;
 use Mediawiki\Api\SimpleRequest;
-use Nayjest\StrCaseConverter\Str;
 use Psr\Cache\CacheItemPoolInterface;
 use Samwilson\SimpleWikidata\Properties\Time;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Item {
 
+	/** @var string|bool */
+	const INSTANCE_OF = false;
+
 	const PROP_INSTANCE_OF = 'P31';
 	const PROP_TITLE = 'P1476';
 	const PROP_IMAGE = 'P18';
 	const PROP_AUTHOR = 'P50';
+
+	/** @var string[] List of Q-numbers of registered classes. */
+	protected static $registeredClasses = [];
 
 	/** @var string */
 	protected $id;
@@ -55,18 +60,34 @@ class Item {
 	public static function factory( $id, $lang, CacheItemPoolInterface $cache ) {
 		$item = new Item( $id, $lang, $cache );
 		foreach ( $item->getPropertyOfTypeItem( self::PROP_INSTANCE_OF ) as $instanceOf ) {
-			// Try to find a class mating the 'instance of' name.
-			$possibleBaseClassName = Str::toCamelCase( $instanceOf->getItem()->getLabel() );
-			$possibleClassName = __NAMESPACE__ . '\\Items\\' . $possibleBaseClassName;
-			if ( class_exists( $possibleClassName ) ) {
-				// This won't re-request the metadata, because that's cached.
-				return new $possibleClassName( $id, $lang, $cache );
+			// Try to find a class matching the registered 'instance of'.
+			foreach ( static::$registeredClasses as $classId => $className ) {
+				// If this 'instance of' is registered, use it.
+				if ( $classId === $instanceOf->getItem()->getId() ) {
+					// This won't re-request the metadata, because that's cached.
+					return new $className( $id, $lang, $cache );
+				}
 			}
 		}
 
 		// If we're here, just leave it as a basic Item.
 		$item->setCache( $cache );
 		return $item;
+	}
+
+	/**
+	 * Register this class as a candidate for being created by Item::factory.
+	 * Should only be called on subclasses of Item.
+	 * @throws Exception if called on Item or the registering class does not have INSTANCE_OF set.
+	 */
+	public static function register() {
+		if ( static::class === self::class ) {
+			throw new Exception( __METHOD__ . ' should only be called on subclasses of Item' );
+		}
+		if ( !static::INSTANCE_OF ) {
+			throw new Exception( 'Please set INSTANCE_OF for ' . static::class );
+		}
+		static::$registeredClasses[ static::INSTANCE_OF ] = static::class;
 	}
 
 	/**

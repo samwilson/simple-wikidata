@@ -5,7 +5,7 @@
          beStrictAboutOutputDuringTests="true"
          verbose="true">
     <testsuites>
-        <testsuite>
+        <testsuite name="simple-wikidata">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
