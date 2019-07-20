@@ -18,6 +18,7 @@ class RailwayStation extends \Samwilson\SimpleWikidata\Item {
 	 * Every subclass of Item should define its 'instance of' ID.
 	 */
 	const INSTANCE_OF = 'Q55488';
+
 	/**
 	 * It can then contain any type-specific methods that are required.
 	 * @return RailwayStation[]
@@ -25,6 +26,7 @@ class RailwayStation extends \Samwilson\SimpleWikidata\Item {
 	public function hasAdjacentStations() {
 		return $this->getPropertyOfTypeItem( 'P197' );
 	}
+
 	/**
 	 * Including queries.
 	 * @return RailwayStation[]

@@ -16,11 +16,14 @@ class PropertyTest extends TestCase {
 	/** @var CacheItemPoolInterface */
 	protected $cache;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->cache = new Pool( new BlackHole() );
 	}
 
+	/**
+	 * @covers \Samwilson\SimpleWikidata\Properties\Time
+	 */
 	public function testIdAndLabel() {
 		$prop = new Time( [
 			'mainsnak' => [

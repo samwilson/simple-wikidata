@@ -13,9 +13,10 @@ $hills = $query->getItems();
 foreach ( $hills as $hill ) {
 	$heights = $hill->getPropertyOfTypeQuantity( 'P2044' );
 	if ( !$heights ) {
-		echo "No heights found for ".$hill->getLabel()."\n";
+		echo "No heights found for " . $hill->getLabel() . "\n";
 		continue;
 	}
 	$height = array_shift( $heights );
-	echo $hill->getLabel()." is ".$height['amount']." ".$height['unit']->getLabel()." high.\n";
+	echo $hill->getLabel() . " is "
+		. $height['amount'] . " " . $height['unit']->getLabel() . " high.\n";
 }

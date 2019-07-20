@@ -17,7 +17,7 @@ class ItemTest extends TestCase {
 	/** @var CacheItemPoolInterface */
 	protected $cache;
 
-	public function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->cache = new Pool( new BlackHole() );
 	}
@@ -35,7 +35,8 @@ class ItemTest extends TestCase {
 	 * @covers \Samwilson\SimpleWikidata\Item::register()
 	 */
 	public function testRegisterIncorrectlyConfiguredClass() {
-		static::expectExceptionMessage( 'Please set INSTANCE_OF for Samwilson\SimpleWikidata\Tests\Fixture\ItemWithNoInstanceOf' );
+		$className = ItemWithNoInstanceOf::class;
+		static::expectExceptionMessage( 'Please set INSTANCE_OF for ' . $className );
 		ItemWithNoInstanceOf::register();
 	}
 

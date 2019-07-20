@@ -112,7 +112,7 @@ class Item {
 	 */
 	public function getLabel() {
 		$entity = $this->getEntity( $this->id );
-		if ( ! empty( $entity['labels'][ $this->lang ]['value'] ) ) {
+		if ( !empty( $entity['labels'][ $this->lang ]['value'] ) ) {
 			// Use the label if there is one.
 			return $entity['labels'][ $this->lang ]['value'];
 		}
@@ -124,7 +124,7 @@ class Item {
 	 * @return string The Wikidata.org URL for this item.
 	 */
 	public function getWikidataUrl() {
-		return $this->wikidataUrlBase.$this->id;
+		return $this->wikidataUrlBase . $this->id;
 	}
 
 	/**
@@ -150,7 +150,8 @@ class Item {
 			$domCrawler = new Crawler();
 			$wikiProjectUrl = 'https://www.wikidata.org/wiki/Wikidata:' . $wikiProject;
 			$domCrawler->addHtmlContent( file_get_contents( $wikiProjectUrl ) );
-			$propAncors = "//h3/span[@id='" . ucfirst( $type ) . "_item_properties']/../following-sibling::table[1]//td[2]/a";
+			$propAncors = "//h3/span[@id='" . ucfirst( $type ) . "_item_properties']"
+				. "/../following-sibling::table[1]//td[2]/a";
 			$propCells = $domCrawler->filterXPath( $propAncors );
 			$propIds = [];
 			$propCells->each( function ( Crawler $node, $i ) use ( &$propIds ) {
@@ -219,6 +220,11 @@ class Item {
 		return $items;
 	}
 
+	/**
+	 * Set a claim to the given Item.
+	 * @param string $property Property ID, with 'P'.
+	 * @param string $itemId Item ID with 'Q'.
+	 */
 	public function setPropertyOfTypeItem( $property, $itemId ) {
 		$itemIdNumeric = substr( $itemId, 1 );
 
@@ -256,6 +262,11 @@ class Item {
 		$this->cache->deleteItem( $this->getEntityCacheKey( $this->id ) );
 	}
 
+	/**
+	 * @param string $entityId
+	 * @param string $propertyId
+	 * @return array|bool
+	 */
 	public function getPropertyOfTypeUrl( $entityId, $propertyId ) {
 		$entity = $this->getEntity( $entityId );
 		if ( !isset( $entity['claims'][$propertyId] ) ) {
@@ -269,6 +280,11 @@ class Item {
 		return $urls;
 	}
 
+	/**
+	 * @param string $entityId
+	 * @param string $propertyId
+	 * @return array|bool
+	 */
 	public function getPropertyOfTypeExternalIdentifier( $entityId, $propertyId ) {
 		$entity = $this->getEntity( $entityId );
 		if ( !isset( $entity['claims'][$propertyId] ) ) {
@@ -324,12 +340,14 @@ class Item {
 	}
 
 	/**
-	 * Literal data field for a quantity that relates to some kind of well-defined unit. The actual unit goes in the data values that is entered.
-	 *   - amount – implicit part of the string (mapping of unit prefix is unclear)
-	 *   - unit – implicit part of the string that defaults to "1" (mapping to standardizing body is unclear)
+	 * Literal data field for a quantity that relates to some kind of well-defined unit.
+	 * The actual unit goes in the data values that is entered.
+	 *   - amount     – implicit part of the string (mapping of unit prefix is unclear)
+	 *   - unit       – implicit part of the string that defaults to "1" (mapping to standardizing
+	 *                  body is unclear)
 	 *   - upperbound - quantity's upper bound
 	 *   - lowerbound - quantity's lower bound
-	 * @param $property
+	 * @param string $property
 	 * @return mixed[]|bool If it's not false it's an array with 'amount', 'unit', etc.
 	 */
 	public function getPropertyOfTypeQuantity( $property ) {
@@ -398,6 +416,9 @@ class Item {
 		return $this->getId() !== false;
 	}
 
+	/**
+	 * @return array With 'html' and 'title' keys.
+	 */
 	public function getWikipediaIntro() {
 		$cacheKey = 'wikipedia-intro-' . $this->id . $this->lang;
 		if ( $this->cache->hasItem( $cacheKey ) ) {
@@ -435,7 +456,7 @@ class Item {
 
 	/**
 	 * Get the raw entity data from the 'wbgetentities' API call.
-	 * @param string $id The Q-number.
+	 * @param string|null $id The Q-number.
 	 * @param bool $ignoreCache
 	 * @return array|bool
 	 */
@@ -459,7 +480,7 @@ class Item {
 	}
 
 	/**
-	 * @param $id
+	 * @param string $id
 	 *
 	 * @return string
 	 */
