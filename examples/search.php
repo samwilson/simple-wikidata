@@ -13,5 +13,5 @@ foreach ( $items as $item ) {
 		\Samwilson\SimpleWikidata\Item::PROP_INSTANCE_OF
 	);
 	$instanceOfLabel = isset( $instanceOf[0] ) ? $instanceOf[0]->getItem()->getLabel() : 'UNKNOWN';
-	echo $item->getLabel().' ('.$instanceOfLabel.')'."\n";
+	echo $item->getLabel() . ' (' . $instanceOfLabel . ')' . "\n";
 }

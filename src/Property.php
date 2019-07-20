@@ -6,20 +6,25 @@ use Psr\Cache\CacheItemPoolInterface;
 
 abstract class Property {
 
-		/** @var string[] */
+	/** @var string[] */
 	protected $claim;
 
-		/** @var string */
+	/** @var string */
 	protected $lang;
 
-		/** @var CacheItemPoolInterface */
+	/** @var CacheItemPoolInterface */
 	protected $cache;
 
-		public function __construct( $claim, $lang, $cache ) {
+	/**
+	 * @param string $claim The claim data array.
+	 * @param string $lang The language code.
+	 * @param CacheItemPoolInterface $cache
+	 */
+	public function __construct( array $claim, $lang, CacheItemPoolInterface $cache ) {
 		$this->claim = $claim;
 		$this->lang = $lang;
 		$this->cache = $cache;
-	 }
+	}
 
 	/**
 	 * @return Reference[]

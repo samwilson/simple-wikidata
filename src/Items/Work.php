@@ -7,7 +7,7 @@ use Samwilson\SimpleWikidata\Item;
 use Samwilson\SimpleWikidata\Query;
 
 /**
- * @link 
+ * @link
  */
 class Work extends Item {
 
@@ -53,7 +53,7 @@ class Work extends Item {
 	 */
 	public function getPropertyOfTypeItems( $property ) {
 		$entity = $this->getEntity( $this->id );
-		if ( ! isset( $entity['claims'][ $property ] ) ) {
+		if ( !isset( $entity['claims'][ $property ] ) ) {
 			return [];
 		}
 		$items = [];
@@ -89,7 +89,7 @@ class Work extends Item {
 		$query = new Query( $sparql, $this->lang, $this->cache );
 		$editions = $query->getItems();
 		usort( $editions, function ( Item $a, Item $b ) {
-			if ( $a instanceof EditionItem and $b instanceof EditionItem ) {
+			if ( $a instanceof Edition && $b instanceof Edition ) {
 				return $a->getPublicationYear() - $b->getPublicationYear();
 			}
 			return 0;

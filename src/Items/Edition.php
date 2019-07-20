@@ -60,7 +60,7 @@ class Edition extends Item {
 				$lang = substr( $sitelink['site'], 0, strpos( $sitelink['site'], 'wikisource' ) );
 				return [
 					'title' => $sitelink['title'],
-					'url' => "https://$lang.wikisource.org/wiki/".$sitelink['title'],
+					'url' => "https://$lang.wikisource.org/wiki/" . $sitelink['title'],
 					'lang' => $lang,
 				];
 			}
