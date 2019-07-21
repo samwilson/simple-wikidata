@@ -3,6 +3,7 @@
 namespace Samwilson\SimpleWikidata;
 
 use Exception;
+use GuzzleHttp\Client;
 use Psr\Cache\CacheItemPoolInterface;
 use SimpleXmlElement;
 
@@ -51,12 +52,18 @@ class Query {
 	 * @throws Exception
 	 */
 	protected function getXml( $query ) {
-		$url = "https://query.wikidata.org/bigdata/namespace/wdq/sparql?query=" . urlencode( $query );
+		$url = "https://query.wikidata.org/bigdata/namespace/wdq/sparql";
+		$client = new Client();
 		try {
-			$result = file_get_contents( $url );
+			$response = $client->request( 'GET', $url, [
+				// https://meta.wikimedia.org/wiki/User-Agent_policy
+				'User-Agent' => 'samwilson/simple-wikidata (User:Samwilson) PHP',
+				'query' => [ 'query' => $query ],
+			] );
 		} catch ( Exception $e ) {
 			throw new Exception( "Unable to run query: <pre>" . htmlspecialchars( $query ) . "</pre>", 500 );
 		}
+		$result = $response->getBody()->getContents();
 		if ( empty( $result ) ) {
 			$msg = "No result from query: <pre>" . htmlspecialchars( $query ) . "</pre>";
 			throw new Exception( $msg, 500 );
